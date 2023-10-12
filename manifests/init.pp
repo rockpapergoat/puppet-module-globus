@@ -237,6 +237,9 @@
 # @param oauth_logo
 #   See globus-connect-server.conf OAuth/Logo
 #   Globus v4 only
+# @param proxy
+#   Set a proxy for yum repos, if needed
+#   default: undef
 #
 class globus (
   Variant[Enum['4','5'],Integer[4,5]] $version = '5',
@@ -257,6 +260,7 @@ class globus (
   Boolean $manage_firewall = true,
   Boolean $manage_epel = true,
   Array $repo_dependencies = ['yum-plugin-priorities'],
+  String $proxy = undef,
 
   Boolean $manage_user = true,
   Optional[Integer] $group_gid = undef,

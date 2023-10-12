@@ -21,11 +21,10 @@ class globus::repo::el {
     ensure_packages($globus::repo_dependencies)
   }
 
-  exec { 'RPM-GPG-KEY-Globus':
-    path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-    command => "wget -qO- ${globus::release_url} | rpm2cpio - | cpio -i --quiet --to-stdout ./etc/pki/rpm-gpg/RPM-GPG-KEY-Globus > /etc/pki/rpm-gpg/RPM-GPG-KEY-Globus",
-    creates => '/etc/pki/rpm-gpg/RPM-GPG-KEY-Globus',
-    before  => Yumrepo['Globus-Toolkit'],
+  if String($globus::proxy) {
+    $proxy = $globus::proxy
+  } else {
+    $proxy = '_none_'
   }
 
   yumrepo { 'Globus-Toolkit':
@@ -35,7 +34,8 @@ class globus::repo::el {
     priority       => '98',
     enabled        => '1',
     gpgcheck       => '1',
-    gpgkey         => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Globus',
+    gpgkey         => 'https://downloads.globus.org/toolkit/globus-connect-server/RPM-GPG-KEY-Globus',
+    proxy          => $proxy
   }
 
   yumrepo { 'Globus-Toolkit-6-Testing':
@@ -45,7 +45,8 @@ class globus::repo::el {
     priority       => '98',
     enabled        => $testing_enabled,
     gpgcheck       => '1',
-    gpgkey         => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Globus',
+    gpgkey         => 'https://downloads.globus.org/toolkit/globus-connect-server/RPM-GPG-KEY-Globus',
+    proxy          => $proxy
   }
 
   yumrepo { 'globus-connect-server-5':
@@ -55,8 +56,8 @@ class globus::repo::el {
     priority       => '98',
     enabled        => $gcs_enabled,
     gpgcheck       => '1',
-    gpgkey         => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Globus',
-    require        => Exec['RPM-GPG-KEY-Globus'],
+    gpgkey         => 'https://downloads.globus.org/toolkit/globus-connect-server/RPM-GPG-KEY-Globus',
+    proxy          => $proxy
   }
 
   yumrepo { 'globus-connect-server-5-testing':
@@ -66,7 +67,7 @@ class globus::repo::el {
     priority       => '98',
     enabled        => $gcs_testing_enabled,
     gpgcheck       => '1',
-    gpgkey         => 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Globus',
-    require        => Exec['RPM-GPG-KEY-Globus'],
+    gpgkey         => 'https://downloads.globus.org/toolkit/globus-connect-server/RPM-GPG-KEY-Globus',
+    proxy          => $proxy
   }
 }
