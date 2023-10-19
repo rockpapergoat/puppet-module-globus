@@ -21,7 +21,7 @@ class globus::repo::el {
     ensure_packages($globus::repo_dependencies)
   }
 
-  if String($globus::proxy) {
+  if defined($globus::proxy) {
     $proxy = $globus::proxy
   } else {
     $proxy = '_none_'

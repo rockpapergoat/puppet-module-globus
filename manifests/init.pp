@@ -260,7 +260,7 @@ class globus (
   Boolean $manage_firewall = true,
   Boolean $manage_epel = true,
   Array $repo_dependencies = ['yum-plugin-priorities'],
-  String $proxy = undef,
+  Optional[String] $proxy = undef,
 
   Boolean $manage_user = true,
   Optional[Integer] $group_gid = undef,
