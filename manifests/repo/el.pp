@@ -1,6 +1,6 @@
 # @summary Manage globus repo
 # @api private
-class globus::repo::el {
+class globus::repo::el ($proxy = $globus::proxy) {
   if String($globus::version) == '5' {
     $gcs_enabled = '1'
   } else {
@@ -21,10 +21,10 @@ class globus::repo::el {
     ensure_packages($globus::repo_dependencies)
   }
 
-  if defined(String($globus::proxy)) {
-    $proxy = $globus::proxy
+  if $proxy == undef {
+    $_proxy = '_none_'
   } else {
-    $proxy = '_none_'
+    $_proxy = $globus::proxy
   }
 
   yumrepo { 'Globus-Toolkit':
@@ -35,7 +35,7 @@ class globus::repo::el {
     enabled        => '1',
     gpgcheck       => '1',
     gpgkey         => 'https://downloads.globus.org/toolkit/globus-connect-server/RPM-GPG-KEY-Globus',
-    proxy          => $proxy
+    proxy          => $_proxy
   }
 
   yumrepo { 'Globus-Toolkit-6-Testing':
@@ -46,7 +46,7 @@ class globus::repo::el {
     enabled        => $testing_enabled,
     gpgcheck       => '1',
     gpgkey         => 'https://downloads.globus.org/toolkit/globus-connect-server/RPM-GPG-KEY-Globus',
-    proxy          => $proxy
+    proxy          => $_proxy
   }
 
   yumrepo { 'globus-connect-server-5':
@@ -57,7 +57,7 @@ class globus::repo::el {
     enabled        => $gcs_enabled,
     gpgcheck       => '1',
     gpgkey         => 'https://downloads.globus.org/toolkit/globus-connect-server/RPM-GPG-KEY-Globus',
-    proxy          => $proxy
+    proxy          => $_proxy
   }
 
   yumrepo { 'globus-connect-server-5-testing':
@@ -68,6 +68,6 @@ class globus::repo::el {
     enabled        => $gcs_testing_enabled,
     gpgcheck       => '1',
     gpgkey         => 'https://downloads.globus.org/toolkit/globus-connect-server/RPM-GPG-KEY-Globus',
-    proxy          => $proxy
+    proxy          => $_proxy
   }
 }
